@@ -108,7 +108,14 @@ class ControllerPaymentNextpay extends Controller {
 					$data['button_continue'] = $this->language->get('button_complete');
 					$data['continue'] = $this->url->link('checkout/success');
             }else{
-                throw new Exception($this->checkState($verifyResult)['error']);
+					$comment = $this->language->get('text_results') . $trans_id;
+					$data['text_results'] = $this->language->get('text_results') . '[' .  $trans_id . ']';
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('nextpay_order_status_id'), $comment, true);
+
+					$data['error_warning'] = NULL;
+					$data['results'] = 'پرداخت ناموفق';
+					$data['button_continue'] = $this->language->get('button_view_cart');
+					$data['continue'] = $this->url->link('checkout/cart');
 			}
 
 		} catch (Exception $e) {
